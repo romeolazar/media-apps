@@ -3,27 +3,19 @@ version: '2'
 #here we create the volumes. We keep the same names for backup purposes
 volumes:
   radarr:
-    name: radarr
   sonarr:
-    name: sonarr
   lidarr:
-    name: lidarr
   bazarr:
-    name: bazarr
   prowlarr:
-    name: prowlarr
   jackett:
-    name: jackett
   plex:
-    name: plex
   qbittorrent:
-    name: qbittorrent
 
 #we put all containers under the same network
 networks:
   internal-network:
     driver: bridge
-    name: media_network
+#      name: media_network
 
 services:
   #Bazarr: is a companion application to Sonarr and Radarr that manages and downloads subtitles.
@@ -156,3 +148,6 @@ services:
       - TZ=${TZ}
     volumes:
       - 'prowlarr:/config'
+    networks:
+      - internal-network
+    restart: unless-stopped
