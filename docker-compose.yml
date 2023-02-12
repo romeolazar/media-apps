@@ -24,9 +24,7 @@ networks:
   internal-network:
     driver: bridge
     name: media_network
-    ipam:
-      config:
-        - subnet: 10.4.0.0/16
+
 services:
   #Bazarr: is a companion application to Sonarr and Radarr that manages and downloads subtitles.
   bazarr:
@@ -140,7 +138,7 @@ services:
       - PGID=${PGID}
       - VERSION=docker
       - TZ=${TZ}
-      - PLEX_CLAIM="claim-nCdGje_s6yVh9NiupXsD"
+      - PLEX_CLAIM=${PLEX_CLAIM}
     volumes:
       - 'plex:/config:rw'
       - '${USERDIR}:/data:ro'
