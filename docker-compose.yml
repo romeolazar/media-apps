@@ -1,0 +1,160 @@
+version: '2'
+
+#here we create the volumes. We keep the same names for backup purposes
+volumes:
+  radarr:
+    name: radarr
+  sonarr:
+    name: sonarr
+  lidarr:
+    name: lidarr
+  bazarr:
+    name: bazarr
+  prowlarr:
+    name: prowlarr
+  jackett:
+    name: jackett
+  plex:
+    name: plex
+  qbittorrent:
+    name: qbittorrent
+
+#we put all containers under the same network
+networks:
+  internal-network:
+    driver: bridge
+    name: media_network
+    ipam:
+      config:
+        - subnet: 10.4.0.0/16
+services:
+  #Bazarr: is a companion application to Sonarr and Radarr that manages and downloads subtitles.
+  bazarr:
+    image: hotio/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - 'bazarr:/config'
+      - '${USERDIR}/media:/media'
+    ports:
+      - '6767:6767'
+    networks:
+      - internal-network
+    restart: unless-stopped
+  #qBittorrent: an advanced and multi-platform BitTorrent client.
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - FILE__PASSWORD=${PASSWORD}
+    ports:
+      - '8080:8080'
+      - '6881:6881'
+      - '6881:6881/udp'
+    volumes:
+      - 'qbittorrent:/config'
+      - '${USERDIR}/downloads:/downloads'
+    networks:
+      - internal-network
+    restart: unless-stopped
+  #Jackett: works as a proxy server: it translates queries from Sonarr, Radarr, Lidarr, qBittorrent, etc.). Uses private trackers.
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    ports:
+      - '9117:9117'
+    volumes:
+      - 'jackett:/config'
+      - '${USERDIR}/downloads:/downloads'
+    networks:
+      - internal-network
+    restart: unless-stopped
+  #Sonarr: It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them.
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - 'sonarr:/config'
+      - '${USERDIR}/media:/media'
+      - '${USERDIR}/downloads:/downloads'
+    ports:
+      - '8989:8989'
+    networks:
+      - internal-network
+    restart: unless-stopped
+  #Radarr: It can monitor multiple RSS feeds for new movies and will interface with clients and indexers to grab, sort, and rename them.
+  radarr:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - 'radarr:/config'
+      - '${USERDIR}/media:/media'
+      - '${USERDIR}/downloads:/downloads'
+    ports:
+      - '7878:7878'
+    networks:
+      - internal-network
+    restart: unless-stopped
+  #Lidarr: It can monitor multiple RSS feeds for new albums from your favorite artists and will interface with clients and indexers to grab, sort, and rename them.
+  lidarr:
+    image: ghcr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - 'lidarr:/config'
+      - '${USERDIR}/media/music:/music'
+      - '${USERDIR}/downloads:/downloads'
+    ports:
+      - '8686:8686'
+    networks:
+      - internal-network
+    restart: unless-stopped
+  #Plex Media Server: one place to find and access all the media that matters to you.
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker
+    network_mode: host
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VERSION=docker
+      - TZ=${TZ}
+      - PLEX_CLAIM="claim-nCdGje_s6yVh9NiupXsD"
+    volumes:
+      - 'plex:/config:rw'
+      - '${USERDIR}:/data:ro'
+    restart: always
+#Prowlarr is an indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps.
+  prowlarr:
+    container_name: prowlarr
+    image: cr.hotio.dev/hotio/prowlarr
+    ports:
+      - "9696:9696"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - 'prowlarr:/config'
