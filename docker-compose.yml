@@ -13,7 +13,7 @@ volumes:
 
 #we put all containers under the same network
 networks:
-  internal-network:
+  network:
     driver: bridge
 #      name: media_network
 
