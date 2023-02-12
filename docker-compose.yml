@@ -9,7 +9,7 @@ volumes:
   lidarr:
     name: lidarr
   bazarr:
-    name:bazarr
+    name: bazarr
   prowlarr:
     name: prowlarr
   jackett:
