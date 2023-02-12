@@ -36,7 +36,7 @@ services:
       - TZ=${TZ}
     volumes:
       - 'bazarr:/config'
-      - '${USERDIR}/media:/media'
+      - '${MEDIADIR}:/media'
     ports:
       - '6767:6767'
     networks:
@@ -57,7 +57,7 @@ services:
       - '6881:6881/udp'
     volumes:
       - 'qbittorrent:/config'
-      - '${USERDIR}/downloads:/downloads'
+      - '${DOWNLOADDIR}:/downloads'
     networks:
       - internal-network
     restart: unless-stopped
@@ -73,7 +73,7 @@ services:
       - '9117:9117'
     volumes:
       - 'jackett:/config'
-      - '${USERDIR}/downloads:/downloads'
+      - '${DOWNLOADDIR}:/downloads'
     networks:
       - internal-network
     restart: unless-stopped
@@ -87,8 +87,8 @@ services:
       - TZ=${TZ}
     volumes:
       - 'sonarr:/config'
-      - '${USERDIR}/media:/media'
-      - '${USERDIR}/downloads:/downloads'
+      - '${MEDIADIR}:/media'
+      - '${DOWNLOADDIR}:/downloads'
     ports:
       - '8989:8989'
     networks:
@@ -104,8 +104,8 @@ services:
       - TZ=${TZ}
     volumes:
       - 'radarr:/config'
-      - '${USERDIR}/media:/media'
-      - '${USERDIR}/downloads:/downloads'
+      - '${MEDIADIR}:/media'
+      - '${DOWNLOADDIR}:/downloads'
     ports:
       - '7878:7878'
     networks:
@@ -121,8 +121,8 @@ services:
       - TZ=${TZ}
     volumes:
       - 'lidarr:/config'
-      - '${USERDIR}/media/music:/music'
-      - '${USERDIR}/downloads:/downloads'
+      - '${MEDIADIR}/music:/music'
+      - '${DOWNLOADDIR}:/downloads'
     ports:
       - '8686:8686'
     networks:
