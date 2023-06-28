@@ -36,11 +36,6 @@ Jackett works as a proxy server: it translates queries from apps (Sonarr, Radarr
 DokcerHub: [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett/) \
 Github: [linuxserver/docker-jackett](https://github.com/linuxserver/docker-jackett)
 
-### [Prowlarr](https://github.com/Prowlarr/Prowlarr)
-Prowlarr is an indexer manager/proxy built on the popular *arr .net/reactjs base stack to integrate with your various PVR apps. \
-DockerHub: [linuxserver/prowlarr](https://hub.docker.com/r/linuxserver/prowlarr) \
-GitHub: [prowlarr/prowlarr](https://github.com/Prowlarr/Prowlarr)
-
 ### [Plex](https://www.plex.tv/)
 Plex media server allows you to aggregate all your personal media and access it anywhere you go. Enjoy your own content on all your devices with Plex. \
 DockerHub: [plexinc/pms-docker](https://hub.docker.com/r/plexinc/pms-docker/) \
