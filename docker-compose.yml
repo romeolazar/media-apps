@@ -10,8 +10,6 @@ volumes:
     name: lidarr
   bazarr:
     name: bazarr
-  prowlarr:
-    name: prowlarr
   jackett:
     name: jackett
   plex:
@@ -22,8 +20,8 @@ volumes:
 #we put all containers under the same network
 networks:
   internal-network:
-    driver: bridge
-    name: media_network
+    external: true
+    name: virtual_net
 
 services:
   #Bazarr: is a companion application to Sonarr and Radarr that manages and downloads subtitles.
@@ -143,19 +141,3 @@ services:
       - 'plex:/config:rw'
       - '${USERDIR}:/data:ro'
     restart: always
-#Prowlarr is an indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps.
-  prowlarr:
-    container_name: prowlarr
-    image: cr.hotio.dev/hotio/prowlarr
-    ports:
-      - "9696:9696"
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - UMASK=002
-      - TZ=${TZ}
-    volumes:
-      - 'prowlarr:/config'
-    networks:
-      - internal-network
-    restart: unless-stopped
